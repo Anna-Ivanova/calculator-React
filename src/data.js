@@ -11,4 +11,3 @@ export const buttons = [
     { id: 19, button: { value: "=" } }, { id: 20, button: { value: "+" } },
 ]
 
-

@@ -4,7 +4,7 @@ import Button from './components/Button';
 import './data.js'
 import { buttons } from './data.js';
 const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
+const oper = { '/': (x, y) => x / y, 'x': (x, y) => x * y, '+': (x, y) => x + y, '-': (x, y) => x - y, "^": (x, y) => Math.pow(x, y) }
 const operators = ['/', 'x', '-', '+', "x^n", "√", "%"];
 export default class App extends Component {
 
@@ -57,7 +57,6 @@ export default class App extends Component {
         if (prevstate.sign !== "") { return }
         return {
           result: currentInput === "x^n" ? prevstate.result + '^' : prevstate.result + currentInput,
-
           firstop: prevstate.firstop,
           sign: currentInput === "x^n" ? '^' : currentInput,
           nextvalue: true
@@ -102,58 +101,17 @@ export default class App extends Component {
   }
   calculate = () => {
     let { result, firstop, nextvalue, secondop, sign } = this.state;
-    console.log(result, nextvalue);
-    switch (sign) {
-      case 'x':
+    console.log(result, nextvalue, sign);
+    for (let key in oper) {
+      if (key === sign) {
         this.setState({
-          result: parseFloat(firstop) * parseFloat(secondop),
-          firstop: parseFloat(firstop) * parseFloat(secondop),
+          result: oper[key](parseFloat(firstop), parseFloat(secondop)),
+          firstop: oper[key](parseFloat(firstop), parseFloat(secondop)),
           nextvalue: false,
           secondop: '',
           sign: ''
-        });
-        break;
-      case '/':
-        this.setState({
-          result: parseFloat(firstop) / parseFloat(secondop),
-          firstop: parseFloat(firstop) / parseFloat(secondop),
-          nextvalue: false,
-          secondop: '',
-          sign: ''
-        });
-        break;
-      case '+':
-        this.setState({
-          result: parseFloat(firstop) + parseFloat(secondop),
-          firstop: parseFloat(firstop) + parseFloat(secondop),
-          nextvalue: false,
-          secondop: '',
-          sign: ''
-        });
-        break;
-      case '-':
-        this.setState({
-          result: parseFloat(firstop) - parseFloat(secondop),
-          firstop: parseFloat(firstop) - parseFloat(secondop),
-          nextvalue: false,
-          secondop: '',
-          sign: ''
-        });
-        break;
-      case '^':
-        this.setState({
-          result: Math.pow(parseFloat(firstop), parseFloat(secondop)),
-          firstop: Math.pow(parseFloat(firstop), parseFloat(secondop)),
-          nextvalue: false,
-          secondop: '',
-          sign: ''
-        });
-        break;
-
-      default:
-        console.log('error');
-
-
+        })
+      }
     }
   }
 
